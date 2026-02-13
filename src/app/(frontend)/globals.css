@@ -1,8 +1,7 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import "tailwindcss";
+@config "../../../tailwind.config.mjs";
 
-@layer {
+@layer base {
   * {
     @apply m-0 p-0 box-border border border-solid border-black;
   }

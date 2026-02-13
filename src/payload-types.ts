@@ -155,50 +155,81 @@ export interface UserAuthOperations {
 export interface Page {
   id: number;
   title: string;
-  hero: {
-    type: 'none' | 'highImpact' | 'mediumImpact' | 'lowImpact';
-    richText?: {
-      root: {
-        type: string;
-        children: {
-          type: any;
-          version: number;
-          [k: string]: unknown;
-        }[];
-        direction: ('ltr' | 'rtl') | null;
-        format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
-        indent: number;
-        version: number;
-      };
-      [k: string]: unknown;
-    } | null;
-    links?:
-      | {
-          link: {
-            type?: ('reference' | 'custom') | null;
-            newTab?: boolean | null;
-            reference?:
-              | ({
-                  relationTo: 'pages';
-                  value: number | Page;
-                } | null)
-              | ({
-                  relationTo: 'posts';
-                  value: number | Post;
-                } | null);
-            url?: string | null;
-            label: string;
-            /**
-             * Choose how the link should be rendered.
-             */
-            appearance?: ('default' | 'outline') | null;
-          };
-          id?: string | null;
-        }[]
-      | null;
-    media?: (number | null) | Media;
-  };
-  layout: (CallToActionBlock | ContentBlock | MediaBlock | ArchiveBlock | FormBlock)[];
+  layout?:
+    | (
+        | ArchiveBlock
+        | HeroImage
+        | HorizontalContent
+        | MarketShield
+        | OurFreeTools
+        | LeaderShip
+        | {
+            heading: string;
+            richText?: {
+              root: {
+                type: string;
+                children: {
+                  type: any;
+                  version: number;
+                  [k: string]: unknown;
+                }[];
+                direction: ('ltr' | 'rtl') | null;
+                format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+                indent: number;
+                version: number;
+              };
+              [k: string]: unknown;
+            } | null;
+            id?: string | null;
+            blockName?: string | null;
+            blockType: 'card';
+          }
+        | HeroWithContent
+        | TailoredTool
+        | AdvisorsChooseAdaptive
+        | AdaptiveFactor
+        | AdaptivePortfolio
+        | Cboe
+        | Covered
+        | DownProtection
+        | Effortless
+        | EnterpriseSoluctuon
+        | ForFeature
+        | HowToManage
+        | ManagePortfilio
+        | MeasureFit
+        | MeasureRisk
+        | Personalize
+        | Personalized
+        | Safeguard
+        | SeaFor
+        | TailoredDownside
+        | TheCallWriting
+        | ThePutBuying
+        | UnderstandingAdaptive
+        | UnderstandingRisk
+        | WhatIsMarket
+        | WhatIsProjectRisk
+        | MarketShieldForIndividual
+        | HeroSection_2
+        | FaqBlock
+        | Pricing
+        | RiskWeather
+        | RiskContribution
+        | Toolstab
+        | ProtectionCalculator
+        | ForwardTest
+        | CallToActionBlock
+        | ContentBlock
+        | MediaBlock
+        | FormBlock
+        | CodeBlock
+        | ToolsSection
+        | IntelligencesReport
+        | CtaSection
+        | MediaSection
+      )[]
+    | null;
   meta?: {
     title?: string | null;
     /**
@@ -216,6 +247,64 @@ export interface Page {
   updatedAt: string;
   createdAt: string;
   _status?: ('draft' | 'published') | null;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "ArchiveBlock".
+ */
+export interface ArchiveBlock {
+  introContent?: {
+    root: {
+      type: string;
+      children: {
+        type: any;
+        version: number;
+        [k: string]: unknown;
+      }[];
+      direction: ('ltr' | 'rtl') | null;
+      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+      indent: number;
+      version: number;
+    };
+    [k: string]: unknown;
+  } | null;
+  populateBy?: ('collection' | 'selection') | null;
+  relationTo?: 'posts' | null;
+  categories?: (number | Category)[] | null;
+  limit?: number | null;
+  selectedDocs?:
+    | {
+        relationTo: 'posts';
+        value: number | Post;
+      }[]
+    | null;
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'archive';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "categories".
+ */
+export interface Category {
+  id: number;
+  title: string;
+  /**
+   * When enabled, the slug will auto-generate from the title field on save and autosave.
+   */
+  generateSlug?: boolean | null;
+  slug: string;
+  parent?: (number | null) | Category;
+  breadcrumbs?:
+    | {
+        doc?: (number | null) | Category;
+        url?: string | null;
+        label?: string | null;
+        id?: string | null;
+      }[]
+    | null;
+  updatedAt: string;
+  createdAt: string;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -388,30 +477,6 @@ export interface FolderInterface {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "categories".
- */
-export interface Category {
-  id: number;
-  title: string;
-  /**
-   * When enabled, the slug will auto-generate from the title field on save and autosave.
-   */
-  generateSlug?: boolean | null;
-  slug: string;
-  parent?: (number | null) | Category;
-  breadcrumbs?:
-    | {
-        doc?: (number | null) | Category;
-        url?: string | null;
-        label?: string | null;
-        id?: string | null;
-      }[]
-    | null;
-  updatedAt: string;
-  createdAt: string;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "users".
  */
 export interface User {
@@ -435,6 +500,1807 @@ export interface User {
     | null;
   password?: string | null;
   collection: 'users';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "hero_image".
+ */
+export interface HeroImage {
+  heading?: string | null;
+  richText?: {
+    root: {
+      type: string;
+      children: {
+        type: any;
+        version: number;
+        [k: string]: unknown;
+      }[];
+      direction: ('ltr' | 'rtl') | null;
+      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+      indent: number;
+      version: number;
+    };
+    [k: string]: unknown;
+  } | null;
+  button1?: {
+    label?: string | null;
+    url?: string | null;
+    target?: ('_self' | '_blank') | null;
+  };
+  button2?: {
+    label?: string | null;
+    url?: string | null;
+    target?: ('_self' | '_blank') | null;
+  };
+  heroImage?: (number | null) | Media;
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'hero_image';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "horizontalContent".
+ */
+export interface HorizontalContent {
+  items: {
+    title?: string | null;
+    subtitle?: string | null;
+    richText?: {
+      root: {
+        type: string;
+        children: {
+          type: any;
+          version: number;
+          [k: string]: unknown;
+        }[];
+        direction: ('ltr' | 'rtl') | null;
+        format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+        indent: number;
+        version: number;
+      };
+      [k: string]: unknown;
+    } | null;
+    buttonText?: string | null;
+    buttonUrl?: string | null;
+    image?: (number | null) | Media;
+    id?: string | null;
+  }[];
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'horizontalContent';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "marketShield".
+ */
+export interface MarketShield {
+  heading?: string | null;
+  richText?: {
+    root: {
+      type: string;
+      children: {
+        type: any;
+        version: number;
+        [k: string]: unknown;
+      }[];
+      direction: ('ltr' | 'rtl') | null;
+      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+      indent: number;
+      version: number;
+    };
+    [k: string]: unknown;
+  } | null;
+  ctaText?: string | null;
+  ctaLink?: string | null;
+  subheading?: string | null;
+  features?:
+    | {
+        title?: string | null;
+        richText?: {
+          root: {
+            type: string;
+            children: {
+              type: any;
+              version: number;
+              [k: string]: unknown;
+            }[];
+            direction: ('ltr' | 'rtl') | null;
+            format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+            indent: number;
+            version: number;
+          };
+          [k: string]: unknown;
+        } | null;
+        image: number | Media;
+        id?: string | null;
+      }[]
+    | null;
+  Bottom_subheading?: string | null;
+  subrichText?: {
+    root: {
+      type: string;
+      children: {
+        type: any;
+        version: number;
+        [k: string]: unknown;
+      }[];
+      direction: ('ltr' | 'rtl') | null;
+      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+      indent: number;
+      version: number;
+    };
+    [k: string]: unknown;
+  } | null;
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'marketShield';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "Our_free_tools".
+ */
+export interface OurFreeTools {
+  heading?: string | null;
+  richText?: {
+    root: {
+      type: string;
+      children: {
+        type: any;
+        version: number;
+        [k: string]: unknown;
+      }[];
+      direction: ('ltr' | 'rtl') | null;
+      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+      indent: number;
+      version: number;
+    };
+    [k: string]: unknown;
+  } | null;
+  tools?:
+    | {
+        label?: string | null;
+        image: number | Media;
+        ButtonText?: {
+          label?: string | null;
+          url?: string | null;
+          target?: ('_self' | '_blank') | null;
+        };
+        Subheading?: string | null;
+        richText?: {
+          root: {
+            type: string;
+            children: {
+              type: any;
+              version: number;
+              [k: string]: unknown;
+            }[];
+            direction: ('ltr' | 'rtl') | null;
+            format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+            indent: number;
+            version: number;
+          };
+          [k: string]: unknown;
+        } | null;
+        id?: string | null;
+      }[]
+    | null;
+  subheading?: string | null;
+  subrichText?: {
+    root: {
+      type: string;
+      children: {
+        type: any;
+        version: number;
+        [k: string]: unknown;
+      }[];
+      direction: ('ltr' | 'rtl') | null;
+      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+      indent: number;
+      version: number;
+    };
+    [k: string]: unknown;
+  } | null;
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'Our_free_tools';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "leaderShip".
+ */
+export interface LeaderShip {
+  Heading?: string | null;
+  richText?: {
+    root: {
+      type: string;
+      children: {
+        type: any;
+        version: number;
+        [k: string]: unknown;
+      }[];
+      direction: ('ltr' | 'rtl') | null;
+      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+      indent: number;
+      version: number;
+    };
+    [k: string]: unknown;
+  } | null;
+  Items?:
+    | {
+        Image?: (number | null) | Media;
+        richText?: {
+          root: {
+            type: string;
+            children: {
+              type: any;
+              version: number;
+              [k: string]: unknown;
+            }[];
+            direction: ('ltr' | 'rtl') | null;
+            format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+            indent: number;
+            version: number;
+          };
+          [k: string]: unknown;
+        } | null;
+        title?: string | null;
+        designation?: string | null;
+        id?: string | null;
+      }[]
+    | null;
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'leaderShip';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "hero_with_content".
+ */
+export interface HeroWithContent {
+  Heading?: string | null;
+  richText?: {
+    root: {
+      type: string;
+      children: {
+        type: any;
+        version: number;
+        [k: string]: unknown;
+      }[];
+      direction: ('ltr' | 'rtl') | null;
+      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+      indent: number;
+      version: number;
+    };
+    [k: string]: unknown;
+  } | null;
+  button1?: string | null;
+  Url1?: string | null;
+  target1?: ('_self' | '_blank') | null;
+  button2?: string | null;
+  Url2?: string | null;
+  target2?: ('_self' | '_blank') | null;
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'hero_with_content';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "tailored_tool".
+ */
+export interface TailoredTool {
+  Heading?: string | null;
+  image?: (number | null) | Media;
+  item?:
+    | {
+        Check_Image?: (number | null) | Media;
+        heading?: string | null;
+        richText?: {
+          root: {
+            type: string;
+            children: {
+              type: any;
+              version: number;
+              [k: string]: unknown;
+            }[];
+            direction: ('ltr' | 'rtl') | null;
+            format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+            indent: number;
+            version: number;
+          };
+          [k: string]: unknown;
+        } | null;
+        id?: string | null;
+      }[]
+    | null;
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'tailored_tool';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "advisors_choose_adaptive".
+ */
+export interface AdvisorsChooseAdaptive {
+  Heading?: string | null;
+  Items?:
+    | {
+        heading?: string | null;
+        richText?: {
+          root: {
+            type: string;
+            children: {
+              type: any;
+              version: number;
+              [k: string]: unknown;
+            }[];
+            direction: ('ltr' | 'rtl') | null;
+            format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+            indent: number;
+            version: number;
+          };
+          [k: string]: unknown;
+        } | null;
+        Image?: (number | null) | Media;
+        id?: string | null;
+      }[]
+    | null;
+  SubHeading?: string | null;
+  richText?: {
+    root: {
+      type: string;
+      children: {
+        type: any;
+        version: number;
+        [k: string]: unknown;
+      }[];
+      direction: ('ltr' | 'rtl') | null;
+      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+      indent: number;
+      version: number;
+    };
+    [k: string]: unknown;
+  } | null;
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'advisors_choose_adaptive';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "adaptive_factor".
+ */
+export interface AdaptiveFactor {
+  Heading?: string | null;
+  richText?: {
+    root: {
+      type: string;
+      children: {
+        type: any;
+        version: number;
+        [k: string]: unknown;
+      }[];
+      direction: ('ltr' | 'rtl') | null;
+      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+      indent: number;
+      version: number;
+    };
+    [k: string]: unknown;
+  } | null;
+  SubHeading?: string | null;
+  Items?:
+    | {
+        Heading?: string | null;
+        id?: string | null;
+      }[]
+    | null;
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'adaptive_factor';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "adaptive_portfolio".
+ */
+export interface AdaptivePortfolio {
+  title?: string | null;
+  description?: {
+    root: {
+      type: string;
+      children: {
+        type: any;
+        version: number;
+        [k: string]: unknown;
+      }[];
+      direction: ('ltr' | 'rtl') | null;
+      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+      indent: number;
+      version: number;
+    };
+    [k: string]: unknown;
+  } | null;
+  ProtectionLevels?:
+    | {
+        title?: string | null;
+        content?: {
+          root: {
+            type: string;
+            children: {
+              type: any;
+              version: number;
+              [k: string]: unknown;
+            }[];
+            direction: ('ltr' | 'rtl') | null;
+            format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+            indent: number;
+            version: number;
+          };
+          [k: string]: unknown;
+        } | null;
+        id?: string | null;
+      }[]
+    | null;
+  conclusion?: {
+    root: {
+      type: string;
+      children: {
+        type: any;
+        version: number;
+        [k: string]: unknown;
+      }[];
+      direction: ('ltr' | 'rtl') | null;
+      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+      indent: number;
+      version: number;
+    };
+    [k: string]: unknown;
+  } | null;
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'adaptive_portfolio';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "cboe".
+ */
+export interface Cboe {
+  Image?: (number | null) | Media;
+  Heading?: string | null;
+  richText?: {
+    root: {
+      type: string;
+      children: {
+        type: any;
+        version: number;
+        [k: string]: unknown;
+      }[];
+      direction: ('ltr' | 'rtl') | null;
+      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+      indent: number;
+      version: number;
+    };
+    [k: string]: unknown;
+  } | null;
+  SubHeading?: string | null;
+  SImage?: (number | null) | Media;
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'cboe';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "covered".
+ */
+export interface Covered {
+  Heading?: string | null;
+  richText?: {
+    root: {
+      type: string;
+      children: {
+        type: any;
+        version: number;
+        [k: string]: unknown;
+      }[];
+      direction: ('ltr' | 'rtl') | null;
+      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+      indent: number;
+      version: number;
+    };
+    [k: string]: unknown;
+  } | null;
+  SubHeading?: string | null;
+  Items?:
+    | {
+        Heading?: string | null;
+        id?: string | null;
+      }[]
+    | null;
+  Image?: (number | null) | Media;
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'covered';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "down_protection".
+ */
+export interface DownProtection {
+  Heading?: string | null;
+  Description?: {
+    root: {
+      type: string;
+      children: {
+        type: any;
+        version: number;
+        [k: string]: unknown;
+      }[];
+      direction: ('ltr' | 'rtl') | null;
+      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+      indent: number;
+      version: number;
+    };
+    [k: string]: unknown;
+  } | null;
+  image?: (number | null) | Media;
+  richText?: {
+    root: {
+      type: string;
+      children: {
+        type: any;
+        version: number;
+        [k: string]: unknown;
+      }[];
+      direction: ('ltr' | 'rtl') | null;
+      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+      indent: number;
+      version: number;
+    };
+    [k: string]: unknown;
+  } | null;
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'down_protection';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "effortless".
+ */
+export interface Effortless {
+  Heading?: string | null;
+  richText?: {
+    root: {
+      type: string;
+      children: {
+        type: any;
+        version: number;
+        [k: string]: unknown;
+      }[];
+      direction: ('ltr' | 'rtl') | null;
+      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+      indent: number;
+      version: number;
+    };
+    [k: string]: unknown;
+  } | null;
+  SubHeading?: string | null;
+  Items?:
+    | {
+        Heading?: string | null;
+        richText?: {
+          root: {
+            type: string;
+            children: {
+              type: any;
+              version: number;
+              [k: string]: unknown;
+            }[];
+            direction: ('ltr' | 'rtl') | null;
+            format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+            indent: number;
+            version: number;
+          };
+          [k: string]: unknown;
+        } | null;
+        id?: string | null;
+      }[]
+    | null;
+  SubrichText?: {
+    root: {
+      type: string;
+      children: {
+        type: any;
+        version: number;
+        [k: string]: unknown;
+      }[];
+      direction: ('ltr' | 'rtl') | null;
+      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+      indent: number;
+      version: number;
+    };
+    [k: string]: unknown;
+  } | null;
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'effortless';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "enterprise_soluctuon".
+ */
+export interface EnterpriseSoluctuon {
+  Heading?: string | null;
+  richText?: {
+    root: {
+      type: string;
+      children: {
+        type: any;
+        version: number;
+        [k: string]: unknown;
+      }[];
+      direction: ('ltr' | 'rtl') | null;
+      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+      indent: number;
+      version: number;
+    };
+    [k: string]: unknown;
+  } | null;
+  Items?:
+    | {
+        Heading?: string | null;
+        Title?: string | null;
+        richText?: {
+          root: {
+            type: string;
+            children: {
+              type: any;
+              version: number;
+              [k: string]: unknown;
+            }[];
+            direction: ('ltr' | 'rtl') | null;
+            format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+            indent: number;
+            version: number;
+          };
+          [k: string]: unknown;
+        } | null;
+        image?: (number | null) | Media;
+        id?: string | null;
+      }[]
+    | null;
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'enterprise_soluction';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "for_feature".
+ */
+export interface ForFeature {
+  Heading?: string | null;
+  richText?: {
+    root: {
+      type: string;
+      children: {
+        type: any;
+        version: number;
+        [k: string]: unknown;
+      }[];
+      direction: ('ltr' | 'rtl') | null;
+      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+      indent: number;
+      version: number;
+    };
+    [k: string]: unknown;
+  } | null;
+  Items?:
+    | {
+        Image?: (number | null) | Media;
+        Heading?: string | null;
+        richText?: {
+          root: {
+            type: string;
+            children: {
+              type: any;
+              version: number;
+              [k: string]: unknown;
+            }[];
+            direction: ('ltr' | 'rtl') | null;
+            format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+            indent: number;
+            version: number;
+          };
+          [k: string]: unknown;
+        } | null;
+        id?: string | null;
+      }[]
+    | null;
+  button?: {
+    label?: string | null;
+    url?: string | null;
+    target?: ('_self' | '_blank') | null;
+  };
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'for_feature';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "how_to_manage".
+ */
+export interface HowToManage {
+  Heading?: string | null;
+  first_Description?: {
+    root: {
+      type: string;
+      children: {
+        type: any;
+        version: number;
+        [k: string]: unknown;
+      }[];
+      direction: ('ltr' | 'rtl') | null;
+      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+      indent: number;
+      version: number;
+    };
+    [k: string]: unknown;
+  } | null;
+  Second_Description?: {
+    root: {
+      type: string;
+      children: {
+        type: any;
+        version: number;
+        [k: string]: unknown;
+      }[];
+      direction: ('ltr' | 'rtl') | null;
+      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+      indent: number;
+      version: number;
+    };
+    [k: string]: unknown;
+  } | null;
+  image: number | Media;
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'how_to_manage';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "manage_portfilio".
+ */
+export interface ManagePortfilio {
+  Heading?: string | null;
+  richText?: {
+    root: {
+      type: string;
+      children: {
+        type: any;
+        version: number;
+        [k: string]: unknown;
+      }[];
+      direction: ('ltr' | 'rtl') | null;
+      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+      indent: number;
+      version: number;
+    };
+    [k: string]: unknown;
+  } | null;
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'manage_portfilio';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "measure_fit".
+ */
+export interface MeasureFit {
+  Heading?: string | null;
+  Items?:
+    | {
+        Heading?: string | null;
+        richText?: {
+          root: {
+            type: string;
+            children: {
+              type: any;
+              version: number;
+              [k: string]: unknown;
+            }[];
+            direction: ('ltr' | 'rtl') | null;
+            format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+            indent: number;
+            version: number;
+          };
+          [k: string]: unknown;
+        } | null;
+        id?: string | null;
+      }[]
+    | null;
+  Image?: (number | null) | Media;
+  button?: {
+    label?: string | null;
+    url?: string | null;
+    target?: ('_self' | '_blank') | null;
+  };
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'measure_fit';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "measure_risk".
+ */
+export interface MeasureRisk {
+  Heading?: string | null;
+  richText?: {
+    root: {
+      type: string;
+      children: {
+        type: any;
+        version: number;
+        [k: string]: unknown;
+      }[];
+      direction: ('ltr' | 'rtl') | null;
+      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+      indent: number;
+      version: number;
+    };
+    [k: string]: unknown;
+  } | null;
+  Items?:
+    | {
+        Image?: (number | null) | Media;
+        Heading?: string | null;
+        richText?: {
+          root: {
+            type: string;
+            children: {
+              type: any;
+              version: number;
+              [k: string]: unknown;
+            }[];
+            direction: ('ltr' | 'rtl') | null;
+            format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+            indent: number;
+            version: number;
+          };
+          [k: string]: unknown;
+        } | null;
+        id?: string | null;
+      }[]
+    | null;
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'measure_risk';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "personalize".
+ */
+export interface Personalize {
+  box1_title: {
+    root: {
+      type: string;
+      children: {
+        type: any;
+        version: number;
+        [k: string]: unknown;
+      }[];
+      direction: ('ltr' | 'rtl') | null;
+      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+      indent: number;
+      version: number;
+    };
+    [k: string]: unknown;
+  };
+  box1_description: {
+    root: {
+      type: string;
+      children: {
+        type: any;
+        version: number;
+        [k: string]: unknown;
+      }[];
+      direction: ('ltr' | 'rtl') | null;
+      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+      indent: number;
+      version: number;
+    };
+    [k: string]: unknown;
+  };
+  box1_personalize_content: {
+    root: {
+      type: string;
+      children: {
+        type: any;
+        version: number;
+        [k: string]: unknown;
+      }[];
+      direction: ('ltr' | 'rtl') | null;
+      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+      indent: number;
+      version: number;
+    };
+    [k: string]: unknown;
+  };
+  box1_BTN: {
+    title: string;
+    url: string;
+  };
+  box2_title: {
+    root: {
+      type: string;
+      children: {
+        type: any;
+        version: number;
+        [k: string]: unknown;
+      }[];
+      direction: ('ltr' | 'rtl') | null;
+      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+      indent: number;
+      version: number;
+    };
+    [k: string]: unknown;
+  };
+  box2_description: {
+    root: {
+      type: string;
+      children: {
+        type: any;
+        version: number;
+        [k: string]: unknown;
+      }[];
+      direction: ('ltr' | 'rtl') | null;
+      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+      indent: number;
+      version: number;
+    };
+    [k: string]: unknown;
+  };
+  box2_automate_list?:
+    | {
+        condition_image: number | Media;
+        condition_items: string;
+        id?: string | null;
+      }[]
+    | null;
+  automate_sub_title: {
+    root: {
+      type: string;
+      children: {
+        type: any;
+        version: number;
+        [k: string]: unknown;
+      }[];
+      direction: ('ltr' | 'rtl') | null;
+      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+      indent: number;
+      version: number;
+    };
+    [k: string]: unknown;
+  };
+  box2_BTN: {
+    title: string;
+    url: string;
+  };
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'personalize';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "personalized".
+ */
+export interface Personalized {
+  Items?:
+    | {
+        Heading?: string | null;
+        richText?: {
+          root: {
+            type: string;
+            children: {
+              type: any;
+              version: number;
+              [k: string]: unknown;
+            }[];
+            direction: ('ltr' | 'rtl') | null;
+            format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+            indent: number;
+            version: number;
+          };
+          [k: string]: unknown;
+        } | null;
+        image: number | Media;
+        id?: string | null;
+      }[]
+    | null;
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'personalized';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "safeguard".
+ */
+export interface Safeguard {
+  Heading?: string | null;
+  richText?: {
+    root: {
+      type: string;
+      children: {
+        type: any;
+        version: number;
+        [k: string]: unknown;
+      }[];
+      direction: ('ltr' | 'rtl') | null;
+      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+      indent: number;
+      version: number;
+    };
+    [k: string]: unknown;
+  } | null;
+  Items?:
+    | {
+        Image?: (number | null) | Media;
+        Heading?: string | null;
+        richText?: {
+          root: {
+            type: string;
+            children: {
+              type: any;
+              version: number;
+              [k: string]: unknown;
+            }[];
+            direction: ('ltr' | 'rtl') | null;
+            format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+            indent: number;
+            version: number;
+          };
+          [k: string]: unknown;
+        } | null;
+        id?: string | null;
+      }[]
+    | null;
+  button?: {
+    label?: string | null;
+    url?: string | null;
+    target?: ('_self' | '_blank') | null;
+  };
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'safeguard';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "sea_for".
+ */
+export interface SeaFor {
+  Heading?: string | null;
+  richText?: {
+    root: {
+      type: string;
+      children: {
+        type: any;
+        version: number;
+        [k: string]: unknown;
+      }[];
+      direction: ('ltr' | 'rtl') | null;
+      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+      indent: number;
+      version: number;
+    };
+    [k: string]: unknown;
+  } | null;
+  button?: {
+    label?: string | null;
+    url?: string | null;
+    target?: ('_self' | '_blank') | null;
+  };
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'see_for';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "tailored_downside".
+ */
+export interface TailoredDownside {
+  Items?:
+    | {
+        Heading?: string | null;
+        richText?: {
+          root: {
+            type: string;
+            children: {
+              type: any;
+              version: number;
+              [k: string]: unknown;
+            }[];
+            direction: ('ltr' | 'rtl') | null;
+            format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+            indent: number;
+            version: number;
+          };
+          [k: string]: unknown;
+        } | null;
+        id?: string | null;
+      }[]
+    | null;
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'tailored_downside';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "the_call_writing".
+ */
+export interface TheCallWriting {
+  title?: string | null;
+  des?: {
+    root: {
+      type: string;
+      children: {
+        type: any;
+        version: number;
+        [k: string]: unknown;
+      }[];
+      direction: ('ltr' | 'rtl') | null;
+      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+      indent: number;
+      version: number;
+    };
+    [k: string]: unknown;
+  } | null;
+  measures?:
+    | {
+        item_title?: string | null;
+        item_desc?: {
+          root: {
+            type: string;
+            children: {
+              type: any;
+              version: number;
+              [k: string]: unknown;
+            }[];
+            direction: ('ltr' | 'rtl') | null;
+            format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+            indent: number;
+            version: number;
+          };
+          [k: string]: unknown;
+        } | null;
+        description?: {
+          root: {
+            type: string;
+            children: {
+              type: any;
+              version: number;
+              [k: string]: unknown;
+            }[];
+            direction: ('ltr' | 'rtl') | null;
+            format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+            indent: number;
+            version: number;
+          };
+          [k: string]: unknown;
+        } | null;
+        id?: string | null;
+      }[]
+    | null;
+  imageSrc?: (number | null) | Media;
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'the_call_writing';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "the_put_buying".
+ */
+export interface ThePutBuying {
+  Heading?: string | null;
+  Items?:
+    | {
+        Heading?: string | null;
+        richText?: {
+          root: {
+            type: string;
+            children: {
+              type: any;
+              version: number;
+              [k: string]: unknown;
+            }[];
+            direction: ('ltr' | 'rtl') | null;
+            format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+            indent: number;
+            version: number;
+          };
+          [k: string]: unknown;
+        } | null;
+        id?: string | null;
+      }[]
+    | null;
+  richText?: {
+    root: {
+      type: string;
+      children: {
+        type: any;
+        version: number;
+        [k: string]: unknown;
+      }[];
+      direction: ('ltr' | 'rtl') | null;
+      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+      indent: number;
+      version: number;
+    };
+    [k: string]: unknown;
+  } | null;
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'the_put_buying';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "understanding_adaptive".
+ */
+export interface UnderstandingAdaptive {
+  title: {
+    root: {
+      type: string;
+      children: {
+        type: any;
+        version: number;
+        [k: string]: unknown;
+      }[];
+      direction: ('ltr' | 'rtl') | null;
+      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+      indent: number;
+      version: number;
+    };
+    [k: string]: unknown;
+  };
+  factor_analysis_desc: {
+    root: {
+      type: string;
+      children: {
+        type: any;
+        version: number;
+        [k: string]: unknown;
+      }[];
+      direction: ('ltr' | 'rtl') | null;
+      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+      indent: number;
+      version: number;
+    };
+    [k: string]: unknown;
+  };
+  factor_analysis_sub_desc?:
+    | {
+        title: {
+          root: {
+            type: string;
+            children: {
+              type: any;
+              version: number;
+              [k: string]: unknown;
+            }[];
+            direction: ('ltr' | 'rtl') | null;
+            format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+            indent: number;
+            version: number;
+          };
+          [k: string]: unknown;
+        };
+        id?: string | null;
+      }[]
+    | null;
+  basket_title: {
+    root: {
+      type: string;
+      children: {
+        type: any;
+        version: number;
+        [k: string]: unknown;
+      }[];
+      direction: ('ltr' | 'rtl') | null;
+      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+      indent: number;
+      version: number;
+    };
+    [k: string]: unknown;
+  };
+  basket?:
+    | {
+        title: string;
+        desc: {
+          root: {
+            type: string;
+            children: {
+              type: any;
+              version: number;
+              [k: string]: unknown;
+            }[];
+            direction: ('ltr' | 'rtl') | null;
+            format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+            indent: number;
+            version: number;
+          };
+          [k: string]: unknown;
+        };
+        id?: string | null;
+      }[]
+    | null;
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'understanding_adaptive';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "understanding_risk".
+ */
+export interface UnderstandingRisk {
+  Heading?: string | null;
+  description?: {
+    root: {
+      type: string;
+      children: {
+        type: any;
+        version: number;
+        [k: string]: unknown;
+      }[];
+      direction: ('ltr' | 'rtl') | null;
+      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+      indent: number;
+      version: number;
+    };
+    [k: string]: unknown;
+  } | null;
+  button?: {
+    label?: string | null;
+    url?: string | null;
+    target?: ('_self' | '_blank') | null;
+  };
+  content?: {
+    root: {
+      type: string;
+      children: {
+        type: any;
+        version: number;
+        [k: string]: unknown;
+      }[];
+      direction: ('ltr' | 'rtl') | null;
+      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+      indent: number;
+      version: number;
+    };
+    [k: string]: unknown;
+  } | null;
+  image?: (number | null) | Media;
+  SubHeading?: string | null;
+  richText?: {
+    root: {
+      type: string;
+      children: {
+        type: any;
+        version: number;
+        [k: string]: unknown;
+      }[];
+      direction: ('ltr' | 'rtl') | null;
+      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+      indent: number;
+      version: number;
+    };
+    [k: string]: unknown;
+  } | null;
+  list?: {
+    root: {
+      type: string;
+      children: {
+        type: any;
+        version: number;
+        [k: string]: unknown;
+      }[];
+      direction: ('ltr' | 'rtl') | null;
+      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+      indent: number;
+      version: number;
+    };
+    [k: string]: unknown;
+  } | null;
+  bottomdescription?: {
+    root: {
+      type: string;
+      children: {
+        type: any;
+        version: number;
+        [k: string]: unknown;
+      }[];
+      direction: ('ltr' | 'rtl') | null;
+      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+      indent: number;
+      version: number;
+    };
+    [k: string]: unknown;
+  } | null;
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'understanding_risk';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "what_is_market".
+ */
+export interface WhatIsMarket {
+  title: string;
+  description?: {
+    root: {
+      type: string;
+      children: {
+        type: any;
+        version: number;
+        [k: string]: unknown;
+      }[];
+      direction: ('ltr' | 'rtl') | null;
+      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+      indent: number;
+      version: number;
+    };
+    [k: string]: unknown;
+  } | null;
+  protectionDetails?: {
+    root: {
+      type: string;
+      children: {
+        type: any;
+        version: number;
+        [k: string]: unknown;
+      }[];
+      direction: ('ltr' | 'rtl') | null;
+      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+      indent: number;
+      version: number;
+    };
+    [k: string]: unknown;
+  } | null;
+  protectionDetailsArray?:
+    | {
+        content?: {
+          root: {
+            type: string;
+            children: {
+              type: any;
+              version: number;
+              [k: string]: unknown;
+            }[];
+            direction: ('ltr' | 'rtl') | null;
+            format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+            indent: number;
+            version: number;
+          };
+          [k: string]: unknown;
+        } | null;
+        id?: string | null;
+      }[]
+    | null;
+  imageSrc: number | Media;
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'what_is_market';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "what_is_project_risk".
+ */
+export interface WhatIsProjectRisk {
+  Heading?: string | null;
+  descritpion?: {
+    root: {
+      type: string;
+      children: {
+        type: any;
+        version: number;
+        [k: string]: unknown;
+      }[];
+      direction: ('ltr' | 'rtl') | null;
+      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+      indent: number;
+      version: number;
+    };
+    [k: string]: unknown;
+  } | null;
+  Items?:
+    | {
+        Heading?: string | null;
+        richText?: {
+          root: {
+            type: string;
+            children: {
+              type: any;
+              version: number;
+              [k: string]: unknown;
+            }[];
+            direction: ('ltr' | 'rtl') | null;
+            format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+            indent: number;
+            version: number;
+          };
+          [k: string]: unknown;
+        } | null;
+        id?: string | null;
+      }[]
+    | null;
+  Category?:
+    | {
+        project_risk?: string | null;
+        vix_range?: string | null;
+        notes?: string | null;
+        id?: string | null;
+      }[]
+    | null;
+  descrip?: {
+    root: {
+      type: string;
+      children: {
+        type: any;
+        version: number;
+        [k: string]: unknown;
+      }[];
+      direction: ('ltr' | 'rtl') | null;
+      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+      indent: number;
+      version: number;
+    };
+    [k: string]: unknown;
+  } | null;
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'what_is_project_risk';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "market_shield_for_individual".
+ */
+export interface MarketShieldForIndividual {
+  Heading?: string | null;
+  richText?: {
+    root: {
+      type: string;
+      children: {
+        type: any;
+        version: number;
+        [k: string]: unknown;
+      }[];
+      direction: ('ltr' | 'rtl') | null;
+      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+      indent: number;
+      version: number;
+    };
+    [k: string]: unknown;
+  } | null;
+  image: number | Media;
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'market_shield_for_individual';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "hero_section_2".
+ */
+export interface HeroSection_2 {
+  Heading?: string | null;
+  richText?: {
+    root: {
+      type: string;
+      children: {
+        type: any;
+        version: number;
+        [k: string]: unknown;
+      }[];
+      direction: ('ltr' | 'rtl') | null;
+      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+      indent: number;
+      version: number;
+    };
+    [k: string]: unknown;
+  } | null;
+  button1?: string | null;
+  Url1?: string | null;
+  target1?: ('_self' | '_blank') | null;
+  button2?: string | null;
+  Url2?: string | null;
+  target2?: ('_self' | '_blank') | null;
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'hero_section_2';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "FaqBlock".
+ */
+export interface FaqBlock {
+  faq_title: string;
+  faq_desc?: {
+    root: {
+      type: string;
+      children: {
+        type: any;
+        version: number;
+        [k: string]: unknown;
+      }[];
+      direction: ('ltr' | 'rtl') | null;
+      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+      indent: number;
+      version: number;
+    };
+    [k: string]: unknown;
+  } | null;
+  categories: {
+    name: string;
+    posts: {
+      title: string;
+      content?: {
+        root: {
+          type: string;
+          children: {
+            type: any;
+            version: number;
+            [k: string]: unknown;
+          }[];
+          direction: ('ltr' | 'rtl') | null;
+          format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+          indent: number;
+          version: number;
+        };
+        [k: string]: unknown;
+      } | null;
+      id?: string | null;
+    }[];
+    id?: string | null;
+  }[];
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'faq';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "pricing".
+ */
+export interface Pricing {
+  pricing_main_title: string;
+  pricing_description?: {
+    root: {
+      type: string;
+      children: {
+        type: any;
+        version: number;
+        [k: string]: unknown;
+      }[];
+      direction: ('ltr' | 'rtl') | null;
+      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+      indent: number;
+      version: number;
+    };
+    [k: string]: unknown;
+  } | null;
+  monthly?: {
+    headers?:
+      | {
+          plan_title: string;
+          plan_description?: {
+            root: {
+              type: string;
+              children: {
+                type: any;
+                version: number;
+                [k: string]: unknown;
+              }[];
+              direction: ('ltr' | 'rtl') | null;
+              format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+              indent: number;
+              version: number;
+            };
+            [k: string]: unknown;
+          } | null;
+          cta_text: string;
+          id?: string | null;
+        }[]
+      | null;
+    features?:
+      | {
+          feature_name: string;
+          feature_hover_name?: string | null;
+          investor_plan?: string | null;
+          advisor_plan?: string | null;
+          advisor_pro_plan?: string | null;
+          id?: string | null;
+        }[]
+      | null;
+  };
+  yearly?: {
+    headers?:
+      | {
+          plan_title: string;
+          plan_description?: {
+            root: {
+              type: string;
+              children: {
+                type: any;
+                version: number;
+                [k: string]: unknown;
+              }[];
+              direction: ('ltr' | 'rtl') | null;
+              format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+              indent: number;
+              version: number;
+            };
+            [k: string]: unknown;
+          } | null;
+          cta_text: string;
+          id?: string | null;
+        }[]
+      | null;
+    features?:
+      | {
+          feature_name: string;
+          feature_hover_name?: string | null;
+          investor_plan?: string | null;
+          advisor_plan?: string | null;
+          advisor_pro_plan?: string | null;
+          id?: string | null;
+        }[]
+      | null;
+  };
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'pricing';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "risk_weather".
+ */
+export interface RiskWeather {
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'risk_weather';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "risk_contribution".
+ */
+export interface RiskContribution {
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'risk_contribution';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "toolstab".
+ */
+export interface Toolstab {
+  tabs: {
+    label: string;
+    Url?: string | null;
+    target?: ('_self' | '_blank') | null;
+    id?: string | null;
+  }[];
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'toolstab';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "protection_calculator".
+ */
+export interface ProtectionCalculator {
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'protection_calculator';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "forward_test".
+ */
+export interface ForwardTest {
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'forward_test';
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -543,40 +2409,6 @@ export interface MediaBlock {
   id?: string | null;
   blockName?: string | null;
   blockType: 'mediaBlock';
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "ArchiveBlock".
- */
-export interface ArchiveBlock {
-  introContent?: {
-    root: {
-      type: string;
-      children: {
-        type: any;
-        version: number;
-        [k: string]: unknown;
-      }[];
-      direction: ('ltr' | 'rtl') | null;
-      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
-      indent: number;
-      version: number;
-    };
-    [k: string]: unknown;
-  } | null;
-  populateBy?: ('collection' | 'selection') | null;
-  relationTo?: 'posts' | null;
-  categories?: (number | Category)[] | null;
-  limit?: number | null;
-  selectedDocs?:
-    | {
-        relationTo: 'posts';
-        value: number | Post;
-      }[]
-    | null;
-  id?: string | null;
-  blockName?: string | null;
-  blockType: 'archive';
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -777,6 +2609,114 @@ export interface Form {
     | null;
   updatedAt: string;
   createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "CodeBlock".
+ */
+export interface CodeBlock {
+  language?: ('typescript' | 'javascript' | 'css') | null;
+  code: string;
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'code';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "tools_section".
+ */
+export interface ToolsSection {
+  toolsHeading?: string | null;
+  useAlternateLayout?: boolean | null;
+  content?: {
+    root: {
+      type: string;
+      children: {
+        type: any;
+        version: number;
+        [k: string]: unknown;
+      }[];
+      direction: ('ltr' | 'rtl') | null;
+      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+      indent: number;
+      version: number;
+    };
+    [k: string]: unknown;
+  } | null;
+  image?: (number | null) | Media;
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'tools_section';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "intelligences_report".
+ */
+export interface IntelligencesReport {
+  intelligences?:
+    | {
+        intelligenceHeading?: string | null;
+        description?: {
+          root: {
+            type: string;
+            children: {
+              type: any;
+              version: number;
+              [k: string]: unknown;
+            }[];
+            direction: ('ltr' | 'rtl') | null;
+            format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+            indent: number;
+            version: number;
+          };
+          [k: string]: unknown;
+        } | null;
+        id?: string | null;
+      }[]
+    | null;
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'intelligences_report';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "cta_section".
+ */
+export interface CtaSection {
+  ctaHeading?: string | null;
+  descrip?: {
+    root: {
+      type: string;
+      children: {
+        type: any;
+        version: number;
+        [k: string]: unknown;
+      }[];
+      direction: ('ltr' | 'rtl') | null;
+      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+      indent: number;
+      version: number;
+    };
+    [k: string]: unknown;
+  } | null;
+  button?: {
+    label?: string | null;
+    url?: string | null;
+    target?: ('_self' | '_blank') | null;
+  };
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'cta_section';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "media_section".
+ */
+export interface MediaSection {
+  video?: (number | null) | Media;
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'media_section';
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -1056,36 +2996,67 @@ export interface PayloadMigration {
  */
 export interface PagesSelect<T extends boolean = true> {
   title?: T;
-  hero?:
-    | T
-    | {
-        type?: T;
-        richText?: T;
-        links?:
-          | T
-          | {
-              link?:
-                | T
-                | {
-                    type?: T;
-                    newTab?: T;
-                    reference?: T;
-                    url?: T;
-                    label?: T;
-                    appearance?: T;
-                  };
-              id?: T;
-            };
-        media?: T;
-      };
   layout?:
     | T
     | {
+        archive?: T | ArchiveBlockSelect<T>;
+        hero_image?: T | HeroImageSelect<T>;
+        horizontalContent?: T | HorizontalContentSelect<T>;
+        marketShield?: T | MarketShieldSelect<T>;
+        Our_free_tools?: T | OurFreeToolsSelect<T>;
+        leaderShip?: T | LeaderShipSelect<T>;
+        card?:
+          | T
+          | {
+              heading?: T;
+              richText?: T;
+              id?: T;
+              blockName?: T;
+            };
+        hero_with_content?: T | HeroWithContentSelect<T>;
+        tailored_tool?: T | TailoredToolSelect<T>;
+        advisors_choose_adaptive?: T | AdvisorsChooseAdaptiveSelect<T>;
+        adaptive_factor?: T | AdaptiveFactorSelect<T>;
+        adaptive_portfolio?: T | AdaptivePortfolioSelect<T>;
+        cboe?: T | CboeSelect<T>;
+        covered?: T | CoveredSelect<T>;
+        down_protection?: T | DownProtectionSelect<T>;
+        effortless?: T | EffortlessSelect<T>;
+        enterprise_soluction?: T | EnterpriseSoluctuonSelect<T>;
+        for_feature?: T | ForFeatureSelect<T>;
+        how_to_manage?: T | HowToManageSelect<T>;
+        manage_portfilio?: T | ManagePortfilioSelect<T>;
+        measure_fit?: T | MeasureFitSelect<T>;
+        measure_risk?: T | MeasureRiskSelect<T>;
+        personalize?: T | PersonalizeSelect<T>;
+        personalized?: T | PersonalizedSelect<T>;
+        safeguard?: T | SafeguardSelect<T>;
+        see_for?: T | SeaForSelect<T>;
+        tailored_downside?: T | TailoredDownsideSelect<T>;
+        the_call_writing?: T | TheCallWritingSelect<T>;
+        the_put_buying?: T | ThePutBuyingSelect<T>;
+        understanding_adaptive?: T | UnderstandingAdaptiveSelect<T>;
+        understanding_risk?: T | UnderstandingRiskSelect<T>;
+        what_is_market?: T | WhatIsMarketSelect<T>;
+        what_is_project_risk?: T | WhatIsProjectRiskSelect<T>;
+        market_shield_for_individual?: T | MarketShieldForIndividualSelect<T>;
+        hero_section_2?: T | HeroSection_2Select<T>;
+        faq?: T | FaqBlockSelect<T>;
+        pricing?: T | PricingSelect<T>;
+        risk_weather?: T | RiskWeatherSelect<T>;
+        risk_contribution?: T | RiskContributionSelect<T>;
+        toolstab?: T | ToolstabSelect<T>;
+        protection_calculator?: T | ProtectionCalculatorSelect<T>;
+        forward_test?: T | ForwardTestSelect<T>;
         cta?: T | CallToActionBlockSelect<T>;
         content?: T | ContentBlockSelect<T>;
         mediaBlock?: T | MediaBlockSelect<T>;
-        archive?: T | ArchiveBlockSelect<T>;
         formBlock?: T | FormBlockSelect<T>;
+        code?: T | CodeBlockSelect<T>;
+        tools_section?: T | ToolsSectionSelect<T>;
+        intelligences_report?: T | IntelligencesReportSelect<T>;
+        cta_section?: T | CtaSectionSelect<T>;
+        media_section?: T | MediaSectionSelect<T>;
       };
   meta?:
     | T
@@ -1100,6 +3071,777 @@ export interface PagesSelect<T extends boolean = true> {
   updatedAt?: T;
   createdAt?: T;
   _status?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "ArchiveBlock_select".
+ */
+export interface ArchiveBlockSelect<T extends boolean = true> {
+  introContent?: T;
+  populateBy?: T;
+  relationTo?: T;
+  categories?: T;
+  limit?: T;
+  selectedDocs?: T;
+  id?: T;
+  blockName?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "hero_image_select".
+ */
+export interface HeroImageSelect<T extends boolean = true> {
+  heading?: T;
+  richText?: T;
+  button1?:
+    | T
+    | {
+        label?: T;
+        url?: T;
+        target?: T;
+      };
+  button2?:
+    | T
+    | {
+        label?: T;
+        url?: T;
+        target?: T;
+      };
+  heroImage?: T;
+  id?: T;
+  blockName?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "horizontalContent_select".
+ */
+export interface HorizontalContentSelect<T extends boolean = true> {
+  items?:
+    | T
+    | {
+        title?: T;
+        subtitle?: T;
+        richText?: T;
+        buttonText?: T;
+        buttonUrl?: T;
+        image?: T;
+        id?: T;
+      };
+  id?: T;
+  blockName?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "marketShield_select".
+ */
+export interface MarketShieldSelect<T extends boolean = true> {
+  heading?: T;
+  richText?: T;
+  ctaText?: T;
+  ctaLink?: T;
+  subheading?: T;
+  features?:
+    | T
+    | {
+        title?: T;
+        richText?: T;
+        image?: T;
+        id?: T;
+      };
+  Bottom_subheading?: T;
+  subrichText?: T;
+  id?: T;
+  blockName?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "Our_free_tools_select".
+ */
+export interface OurFreeToolsSelect<T extends boolean = true> {
+  heading?: T;
+  richText?: T;
+  tools?:
+    | T
+    | {
+        label?: T;
+        image?: T;
+        ButtonText?:
+          | T
+          | {
+              label?: T;
+              url?: T;
+              target?: T;
+            };
+        Subheading?: T;
+        richText?: T;
+        id?: T;
+      };
+  subheading?: T;
+  subrichText?: T;
+  id?: T;
+  blockName?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "leaderShip_select".
+ */
+export interface LeaderShipSelect<T extends boolean = true> {
+  Heading?: T;
+  richText?: T;
+  Items?:
+    | T
+    | {
+        Image?: T;
+        richText?: T;
+        title?: T;
+        designation?: T;
+        id?: T;
+      };
+  id?: T;
+  blockName?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "hero_with_content_select".
+ */
+export interface HeroWithContentSelect<T extends boolean = true> {
+  Heading?: T;
+  richText?: T;
+  button1?: T;
+  Url1?: T;
+  target1?: T;
+  button2?: T;
+  Url2?: T;
+  target2?: T;
+  id?: T;
+  blockName?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "tailored_tool_select".
+ */
+export interface TailoredToolSelect<T extends boolean = true> {
+  Heading?: T;
+  image?: T;
+  item?:
+    | T
+    | {
+        Check_Image?: T;
+        heading?: T;
+        richText?: T;
+        id?: T;
+      };
+  id?: T;
+  blockName?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "advisors_choose_adaptive_select".
+ */
+export interface AdvisorsChooseAdaptiveSelect<T extends boolean = true> {
+  Heading?: T;
+  Items?:
+    | T
+    | {
+        heading?: T;
+        richText?: T;
+        Image?: T;
+        id?: T;
+      };
+  SubHeading?: T;
+  richText?: T;
+  id?: T;
+  blockName?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "adaptive_factor_select".
+ */
+export interface AdaptiveFactorSelect<T extends boolean = true> {
+  Heading?: T;
+  richText?: T;
+  SubHeading?: T;
+  Items?:
+    | T
+    | {
+        Heading?: T;
+        id?: T;
+      };
+  id?: T;
+  blockName?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "adaptive_portfolio_select".
+ */
+export interface AdaptivePortfolioSelect<T extends boolean = true> {
+  title?: T;
+  description?: T;
+  ProtectionLevels?:
+    | T
+    | {
+        title?: T;
+        content?: T;
+        id?: T;
+      };
+  conclusion?: T;
+  id?: T;
+  blockName?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "cboe_select".
+ */
+export interface CboeSelect<T extends boolean = true> {
+  Image?: T;
+  Heading?: T;
+  richText?: T;
+  SubHeading?: T;
+  SImage?: T;
+  id?: T;
+  blockName?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "covered_select".
+ */
+export interface CoveredSelect<T extends boolean = true> {
+  Heading?: T;
+  richText?: T;
+  SubHeading?: T;
+  Items?:
+    | T
+    | {
+        Heading?: T;
+        id?: T;
+      };
+  Image?: T;
+  id?: T;
+  blockName?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "down_protection_select".
+ */
+export interface DownProtectionSelect<T extends boolean = true> {
+  Heading?: T;
+  Description?: T;
+  image?: T;
+  richText?: T;
+  id?: T;
+  blockName?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "effortless_select".
+ */
+export interface EffortlessSelect<T extends boolean = true> {
+  Heading?: T;
+  richText?: T;
+  SubHeading?: T;
+  Items?:
+    | T
+    | {
+        Heading?: T;
+        richText?: T;
+        id?: T;
+      };
+  SubrichText?: T;
+  id?: T;
+  blockName?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "enterprise_soluctuon_select".
+ */
+export interface EnterpriseSoluctuonSelect<T extends boolean = true> {
+  Heading?: T;
+  richText?: T;
+  Items?:
+    | T
+    | {
+        Heading?: T;
+        Title?: T;
+        richText?: T;
+        image?: T;
+        id?: T;
+      };
+  id?: T;
+  blockName?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "for_feature_select".
+ */
+export interface ForFeatureSelect<T extends boolean = true> {
+  Heading?: T;
+  richText?: T;
+  Items?:
+    | T
+    | {
+        Image?: T;
+        Heading?: T;
+        richText?: T;
+        id?: T;
+      };
+  button?:
+    | T
+    | {
+        label?: T;
+        url?: T;
+        target?: T;
+      };
+  id?: T;
+  blockName?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "how_to_manage_select".
+ */
+export interface HowToManageSelect<T extends boolean = true> {
+  Heading?: T;
+  first_Description?: T;
+  Second_Description?: T;
+  image?: T;
+  id?: T;
+  blockName?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "manage_portfilio_select".
+ */
+export interface ManagePortfilioSelect<T extends boolean = true> {
+  Heading?: T;
+  richText?: T;
+  id?: T;
+  blockName?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "measure_fit_select".
+ */
+export interface MeasureFitSelect<T extends boolean = true> {
+  Heading?: T;
+  Items?:
+    | T
+    | {
+        Heading?: T;
+        richText?: T;
+        id?: T;
+      };
+  Image?: T;
+  button?:
+    | T
+    | {
+        label?: T;
+        url?: T;
+        target?: T;
+      };
+  id?: T;
+  blockName?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "measure_risk_select".
+ */
+export interface MeasureRiskSelect<T extends boolean = true> {
+  Heading?: T;
+  richText?: T;
+  Items?:
+    | T
+    | {
+        Image?: T;
+        Heading?: T;
+        richText?: T;
+        id?: T;
+      };
+  id?: T;
+  blockName?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "personalize_select".
+ */
+export interface PersonalizeSelect<T extends boolean = true> {
+  box1_title?: T;
+  box1_description?: T;
+  box1_personalize_content?: T;
+  box1_BTN?:
+    | T
+    | {
+        title?: T;
+        url?: T;
+      };
+  box2_title?: T;
+  box2_description?: T;
+  box2_automate_list?:
+    | T
+    | {
+        condition_image?: T;
+        condition_items?: T;
+        id?: T;
+      };
+  automate_sub_title?: T;
+  box2_BTN?:
+    | T
+    | {
+        title?: T;
+        url?: T;
+      };
+  id?: T;
+  blockName?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "personalized_select".
+ */
+export interface PersonalizedSelect<T extends boolean = true> {
+  Items?:
+    | T
+    | {
+        Heading?: T;
+        richText?: T;
+        image?: T;
+        id?: T;
+      };
+  id?: T;
+  blockName?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "safeguard_select".
+ */
+export interface SafeguardSelect<T extends boolean = true> {
+  Heading?: T;
+  richText?: T;
+  Items?:
+    | T
+    | {
+        Image?: T;
+        Heading?: T;
+        richText?: T;
+        id?: T;
+      };
+  button?:
+    | T
+    | {
+        label?: T;
+        url?: T;
+        target?: T;
+      };
+  id?: T;
+  blockName?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "sea_for_select".
+ */
+export interface SeaForSelect<T extends boolean = true> {
+  Heading?: T;
+  richText?: T;
+  button?:
+    | T
+    | {
+        label?: T;
+        url?: T;
+        target?: T;
+      };
+  id?: T;
+  blockName?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "tailored_downside_select".
+ */
+export interface TailoredDownsideSelect<T extends boolean = true> {
+  Items?:
+    | T
+    | {
+        Heading?: T;
+        richText?: T;
+        id?: T;
+      };
+  id?: T;
+  blockName?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "the_call_writing_select".
+ */
+export interface TheCallWritingSelect<T extends boolean = true> {
+  title?: T;
+  des?: T;
+  measures?:
+    | T
+    | {
+        item_title?: T;
+        item_desc?: T;
+        description?: T;
+        id?: T;
+      };
+  imageSrc?: T;
+  id?: T;
+  blockName?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "the_put_buying_select".
+ */
+export interface ThePutBuyingSelect<T extends boolean = true> {
+  Heading?: T;
+  Items?:
+    | T
+    | {
+        Heading?: T;
+        richText?: T;
+        id?: T;
+      };
+  richText?: T;
+  id?: T;
+  blockName?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "understanding_adaptive_select".
+ */
+export interface UnderstandingAdaptiveSelect<T extends boolean = true> {
+  title?: T;
+  factor_analysis_desc?: T;
+  factor_analysis_sub_desc?:
+    | T
+    | {
+        title?: T;
+        id?: T;
+      };
+  basket_title?: T;
+  basket?:
+    | T
+    | {
+        title?: T;
+        desc?: T;
+        id?: T;
+      };
+  id?: T;
+  blockName?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "understanding_risk_select".
+ */
+export interface UnderstandingRiskSelect<T extends boolean = true> {
+  Heading?: T;
+  description?: T;
+  button?:
+    | T
+    | {
+        label?: T;
+        url?: T;
+        target?: T;
+      };
+  content?: T;
+  image?: T;
+  SubHeading?: T;
+  richText?: T;
+  list?: T;
+  bottomdescription?: T;
+  id?: T;
+  blockName?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "what_is_market_select".
+ */
+export interface WhatIsMarketSelect<T extends boolean = true> {
+  title?: T;
+  description?: T;
+  protectionDetails?: T;
+  protectionDetailsArray?:
+    | T
+    | {
+        content?: T;
+        id?: T;
+      };
+  imageSrc?: T;
+  id?: T;
+  blockName?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "what_is_project_risk_select".
+ */
+export interface WhatIsProjectRiskSelect<T extends boolean = true> {
+  Heading?: T;
+  descritpion?: T;
+  Items?:
+    | T
+    | {
+        Heading?: T;
+        richText?: T;
+        id?: T;
+      };
+  Category?:
+    | T
+    | {
+        project_risk?: T;
+        vix_range?: T;
+        notes?: T;
+        id?: T;
+      };
+  descrip?: T;
+  id?: T;
+  blockName?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "market_shield_for_individual_select".
+ */
+export interface MarketShieldForIndividualSelect<T extends boolean = true> {
+  Heading?: T;
+  richText?: T;
+  image?: T;
+  id?: T;
+  blockName?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "hero_section_2_select".
+ */
+export interface HeroSection_2Select<T extends boolean = true> {
+  Heading?: T;
+  richText?: T;
+  button1?: T;
+  Url1?: T;
+  target1?: T;
+  button2?: T;
+  Url2?: T;
+  target2?: T;
+  id?: T;
+  blockName?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "FaqBlock_select".
+ */
+export interface FaqBlockSelect<T extends boolean = true> {
+  faq_title?: T;
+  faq_desc?: T;
+  categories?:
+    | T
+    | {
+        name?: T;
+        posts?:
+          | T
+          | {
+              title?: T;
+              content?: T;
+              id?: T;
+            };
+        id?: T;
+      };
+  id?: T;
+  blockName?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "pricing_select".
+ */
+export interface PricingSelect<T extends boolean = true> {
+  pricing_main_title?: T;
+  pricing_description?: T;
+  monthly?:
+    | T
+    | {
+        headers?:
+          | T
+          | {
+              plan_title?: T;
+              plan_description?: T;
+              cta_text?: T;
+              id?: T;
+            };
+        features?:
+          | T
+          | {
+              feature_name?: T;
+              feature_hover_name?: T;
+              investor_plan?: T;
+              advisor_plan?: T;
+              advisor_pro_plan?: T;
+              id?: T;
+            };
+      };
+  yearly?:
+    | T
+    | {
+        headers?:
+          | T
+          | {
+              plan_title?: T;
+              plan_description?: T;
+              cta_text?: T;
+              id?: T;
+            };
+        features?:
+          | T
+          | {
+              feature_name?: T;
+              feature_hover_name?: T;
+              investor_plan?: T;
+              advisor_plan?: T;
+              advisor_pro_plan?: T;
+              id?: T;
+            };
+      };
+  id?: T;
+  blockName?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "risk_weather_select".
+ */
+export interface RiskWeatherSelect<T extends boolean = true> {
+  id?: T;
+  blockName?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "risk_contribution_select".
+ */
+export interface RiskContributionSelect<T extends boolean = true> {
+  id?: T;
+  blockName?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "toolstab_select".
+ */
+export interface ToolstabSelect<T extends boolean = true> {
+  tabs?:
+    | T
+    | {
+        label?: T;
+        Url?: T;
+        target?: T;
+        id?: T;
+      };
+  id?: T;
+  blockName?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "protection_calculator_select".
+ */
+export interface ProtectionCalculatorSelect<T extends boolean = true> {
+  id?: T;
+  blockName?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "forward_test_select".
+ */
+export interface ForwardTestSelect<T extends boolean = true> {
+  id?: T;
+  blockName?: T;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -1162,26 +3904,75 @@ export interface MediaBlockSelect<T extends boolean = true> {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "ArchiveBlock_select".
- */
-export interface ArchiveBlockSelect<T extends boolean = true> {
-  introContent?: T;
-  populateBy?: T;
-  relationTo?: T;
-  categories?: T;
-  limit?: T;
-  selectedDocs?: T;
-  id?: T;
-  blockName?: T;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "FormBlock_select".
  */
 export interface FormBlockSelect<T extends boolean = true> {
   form?: T;
   enableIntro?: T;
   introContent?: T;
+  id?: T;
+  blockName?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "CodeBlock_select".
+ */
+export interface CodeBlockSelect<T extends boolean = true> {
+  language?: T;
+  code?: T;
+  id?: T;
+  blockName?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "tools_section_select".
+ */
+export interface ToolsSectionSelect<T extends boolean = true> {
+  toolsHeading?: T;
+  useAlternateLayout?: T;
+  content?: T;
+  image?: T;
+  id?: T;
+  blockName?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "intelligences_report_select".
+ */
+export interface IntelligencesReportSelect<T extends boolean = true> {
+  intelligences?:
+    | T
+    | {
+        intelligenceHeading?: T;
+        description?: T;
+        id?: T;
+      };
+  id?: T;
+  blockName?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "cta_section_select".
+ */
+export interface CtaSectionSelect<T extends boolean = true> {
+  ctaHeading?: T;
+  descrip?: T;
+  button?:
+    | T
+    | {
+        label?: T;
+        url?: T;
+        target?: T;
+      };
+  id?: T;
+  blockName?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "media_section_select".
+ */
+export interface MediaSectionSelect<T extends boolean = true> {
+  video?: T;
   id?: T;
   blockName?: T;
 }
@@ -1778,17 +4569,6 @@ export interface BannerBlock {
   id?: string | null;
   blockName?: string | null;
   blockType: 'banner';
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "CodeBlock".
- */
-export interface CodeBlock {
-  language?: ('typescript' | 'javascript' | 'css') | null;
-  code: string;
-  id?: string | null;
-  blockName?: string | null;
-  blockType: 'code';
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
