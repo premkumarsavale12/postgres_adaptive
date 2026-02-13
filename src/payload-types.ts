@@ -1771,7 +1771,7 @@ export interface UnderstandingAdaptive {
     };
     [k: string]: unknown;
   };
-  factor_analysis_sub_desc?:
+  fa_sub_desc?:
     | {
         title: {
           root: {
@@ -3607,7 +3607,7 @@ export interface ThePutBuyingSelect<T extends boolean = true> {
 export interface UnderstandingAdaptiveSelect<T extends boolean = true> {
   title?: T;
   factor_analysis_desc?: T;
-  factor_analysis_sub_desc?:
+  fa_sub_desc?:
     | T
     | {
         title?: T;
